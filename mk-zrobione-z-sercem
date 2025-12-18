@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MK Zrobione z ♥ | Handmade</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+section {
+    padding: 70px 20px;
+    max-width: 1100px;
+    margin: auto;
+}
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+}
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+}
+.hero img {
+    max-width: 180px;
+}
+.hero h1 {
+    font-size: 44px;
+    margin: 30px 0 10px;
+}
+.hero p {
+    font-size: 18px;
+    color: #555;
+}
+.btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 14px 32px;
+    background: #c9a44c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+}
+.about, .order {
+    background: #fff;
+}
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+.card h3 {
+    margin-top: 0;
+}
+.price {
+    color: #c9a44c;
+    font-weight: 600;
+}
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+.gallery img {
+    width: 100%;
+    border-radius: 12px;
+}
+.contact {
+    background: #fff;
+}
+form {
+    max-width: 500px;
+    margin: auto;
+}
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+footer {
+    text-align: center;
+    padding: 30px;
+    background: #222;
+    color: #fff;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+    <!-- TU WSTAW LOGO -->
+    <img src="logo.png" alt="MK Zrobione z sercem">
+    <h1>MK Zrobione z ♥</h1>
+    <p>Ręcznie tworzone czapki, szaliki, świece i ozdoby wykonywane na zamówienie</p>
+    <a href="#kontakt" class="btn">Zamów produkt</a>
+</section>
+
+<!-- O MNIE -->
+<section class="about">
+    <h2>O mnie</h2>
+    <p>
+        Tworzę rękodzieło z pasji do detali i naturalnych materiałów.
+        Każdy produkt powstaje ręcznie, z dbałością o jakość i estetykę.
+        Pracuję na zamówienie, oferując możliwość personalizacji kolorów i form.
+    </p>
+</section>
+
+<!-- OFERTA -->
+<section>
+    <h2>Oferta</h2>
+    <div class="products">
+        <div class="card">
+            <h3>Czapki handmade</h3>
+            <p>Ręcznie robione czapki na szydełku lub drutach.</p>
+            <p class="price">od 80 zł</p>
+        </div>
+        <div class="card">
+            <h3>Szaliki handmade</h3>
+            <p>Miękkie, ciepłe szaliki o unikalnym splocie.</p>
+            <p class="price">od 120 zł</p>
+        </div>
+        <div class="card">
+            <h3>Komplety</h3>
+            <p>Czapka + szalik dopasowane kolorystycznie.</p>
+            <p class="price">od 180 zł</p>
+        </div>
+        <div class="card">
+            <h3>Świece dekoracyjne</h3>
+            <p>Ręcznie robione świece ozdobne.</p>
+            <p class="price">od 50 zł</p>
+        </div>
+    </div>
+    <p style="margin-top:20px;font-size:14px;color:#555;">
+        Ceny orientacyjne. Każdy produkt wykonywany jest indywidualnie.
+    </p>
+</section>
+
+<!-- ZAMÓWIENIA -->
+<section class="order">
+    <h2>Jak zamówić</h2>
+    <ol>
+        <li>Wybierz produkt lub inspirację</li>
+        <li>Skontaktuj się przez formularz lub telefon</li>
+        <li>Ustalamy szczegóły</li>
+        <li>Realizacja zamówienia</li>
+    </ol>
+</section>
+
+<!-- GALERIA -->
+<section>
+    <h2>Galeria</h2>
+    <div class="gallery">
+        <!-- TU PODMIEŃ ZDJĘCIA -->
+        <img src="img1.jpg">
+        <img src="img2.jpg">
+        <img src="img3.jpg">
+        <img src="img4.jpg">
+    </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt" class="contact">
+    <h2>Kontakt</h2>
+    <p style="text-align:center;">
+        Telefon: <strong>+48 600 000 000</strong><br>
+        Email: <strong>kontakt@mkzrobionezsercem.pl</strong>
+    </p>
+
+    <form>
+        <input type="text" placeholder="Imię">
+        <input type="email" placeholder="Email">
+        <input type="tel" placeholder="Telefon">
+        <textarea rows="5" placeholder="Wiadomość"></textarea>
+        <button class="btn" type="submit">Wyślij zapytanie</button>
+    </form>
+</section>
+
+<footer>
+    © MK Zrobione z ♥ | Rękodzieło handmade
+</footer>
+
+</body>
+</html>
