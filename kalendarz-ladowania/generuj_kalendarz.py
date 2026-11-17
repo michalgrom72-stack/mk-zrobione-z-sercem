@@ -193,7 +193,7 @@ for i in range(NCARS):
     bg = fill("FFFFFF") if i % 2 == 0 else fill(BAND)
     row = f"Kalendarz!$E${kr}:${CL}${kr}"
     has = f"COUNTA(C{r}:E{r})=0"
-    charged = f"(({row}<>\"\")*({row}<>FALSE))"
+    charged = f"(({row}<>\"\")*({row}<>FALSE)*({HDR}<=TODAY()))"
     S.cell(r, 2, f'=IF({has},"",{i+1})')
     if i < len(example):
         for j, v in enumerate(example[i]): S.cell(r, 3 + j, v)
@@ -236,7 +236,7 @@ L0 = S_LAST + 2
 S[f"B{L0}"] = "Jak to działa:"; S[f"B{L0}"].font = font(9, True)
 for i, t in enumerate([
         "1.  Tutaj wpisujesz tylko auta: markę, model i VIN (niebieski tekst). Kolejne auto = kolejny wiersz.",
-        "2.  Ładowania zaznaczasz w zakładce Kalendarz – kratka danego dnia przy danym aucie (✔).",
+        "2.  Ładowania zaznaczasz w zakładce Kalendarz: w kratce danego dnia przy danym aucie wpisz x i Enter (pokaże się ✔).",
         "3.  Data ostatniego i następnego ładowania liczą się same: +2 dni, tylko pn–pt, z pominięciem świąt.",
         "4.  Sprzedane auto: usuń markę, model i VIN – ALE też jego ✔ w kalendarzu (albo wpisz nowe auto w wolnym wierszu)."]):
     S[f"B{L0+1+i}"] = t; S[f"B{L0+1+i}"].font = font(9, color=MUTED)
@@ -252,7 +252,7 @@ K.column_dimensions["A"].width = 2.5; K.column_dimensions["B"].width = 26
 K.column_dimensions["C"].width = 10; K.column_dimensions["D"].width = 11
 for j in range(len(DATES)): K.column_dimensions[L(C0 + j)].width = 4.6
 header_band(K, CL, "KALENDARZ ŁADOWAŃ",
-            "Pomarańczowa kratka = naładuj dziś. Po naładowaniu zaznacz ✔ w kratce (dwuklik / lista / wpisz x) – termin przesunie się sam.")
+            "Pomarańczowa kratka = naładuj dziś. Po naładowaniu wpisz w kratce x i Enter – pojawi się ✔, a termin przesunie się sam.")
 K.row_dimensions[4].height = 8; K.row_dimensions[5].height = 26
 K.merge_cells("B5:D5"); K["B5"] = "=" + TODAY_LINK + '"⟶  PRZEJDŹ DO DZIŚ")'
 paint(K, "B5:D5", f=fill(ACCENT), fnt=font(10, True, INK), al=CENTER)
@@ -304,15 +304,16 @@ for i in range(NCARS):
     for col in (2, 3, 4): K.cell(r, col).border = Border(bottom=thin, right=thin if col == 4 else None)
     for j, d in enumerate(DATES):
         c = K.cell(r, C0 + j)
-        c.protection = UNLOCK; c.alignment = CENTER; c.font = font(11, True, "FFFFFF")
+        c.protection = UNLOCK; c.alignment = CENTER; c.font = font(11, True, "FFFFFF"); c.number_format = '"✔";"✔";;"✔"'
         if d.weekday() != 0: c.border = Border(bottom=thin, right=Side(style="hair", color=LINE))
 
-dvk = DataValidation(type="list", formula1='"✔"', allow_blank=True, showErrorMessage=False)
+dvk = DataValidation(type="list", formula1='"x,✔"', allow_blank=True, showErrorMessage=False)
 K.add_data_validation(dvk); dvk.add(f"E{K_FIRST}:{CL}{K_LAST}")
 
 G = f"E{K_FIRST}:{CL}{K_LAST}"
 e = f"E{K_FIRST}"; h = f"E${K_HDR}"; nx = f"$D{K_FIRST}"; nm = f"$B{K_FIRST}"
 rules = [
+    (f'AND({e}<>"",{e}<>FALSE,{h}>TODAY())', RED, "FFFFFF"),
     (f'AND({e}<>"",{e}<>FALSE)', GREEN, "FFFFFF"),
     (f'AND({nm}<>"",{nx}<>"",{h}=TODAY(),{nx}<=TODAY())', AMBER, INK),
     (f'AND({nm}<>"",{nx}<>"",{h}<TODAY(),{h}>={nx})', RED_L, INK),
@@ -346,17 +347,18 @@ steps = [
     ("2", "Zakładka Ustawienia: wybierz co ile dni ładować (2 lub 3) i sprawdź listę świąt."),
     ("CODZIENNIE (Mateusz)", None),
     ("3", "Otwórz zakładkę Kalendarz i kliknij „PRZEJDŹ DO DZIŚ”. Pomarańczowe kratki w dzisiejszej kolumnie = te auta trzeba dziś naładować."),
-    ("4", "Po naładowaniu zaznacz kratkę: dwuklik (jeśli włączone makro), albo strzałka listy → ✔, albo po prostu wpisz x i Enter."),
+    ("4", "Kliknij kratkę w dzisiejszej kolumnie przy pierwszym aucie i idź w dół: przy naładowanym aucie wpisz x i Enter, przy pozostałych samo Enter – kursor schodzi do kolejnego auta."),
     ("5", "Kratka zrobi się zielona, a termin następnego ładowania (kolumna „Następne”) przesunie się sam o 2 dni robocze."),
     ("6", "Pomyłka? Zaznacz kratkę i naciśnij Delete."),
     ("DOBRZE WIEDZIEĆ", None),
     ("•", "Ładowanie w czwartek → następne w piątek. Ładowanie w piątek → następne w poniedziałek. Święta są omijane tak samo."),
     ("•", "Czerwone kratki = dni, w których auto było do naładowania, a nie zostało naładowane."),
+    ("•", "Ciemnoczerwona kratka z ✔ = zaznaczenie w przyszłym dniu (pomyłka) – nie jest liczone. Usuń je klawiszem Delete."),
     ("•", "Kalendarz obejmuje dni robocze od 02.11.2026 do 29.12.2028. Weekendów w nim nie ma – ładujemy tylko pn–pt."),
     ("•", "Arkusze są zabezpieczone przed przypadkowym skasowaniem wzorów (bez hasła: Recenzja → Nie chroń arkusza)."),
-    ("KLIK = ✔ (opcjonalnie)", None),
-    ("A", "Microsoft 365: zaznacz całą siatkę kalendarza → Wstawianie → Pole wyboru. Wtedy jedno kliknięcie = naładowane (bez makr)."),
-    ("B", "Każdy Excel: dodaj makro z pliku makro_dwuklik.txt (Alt+F11 → arkusz Kalendarz → wklej → zapisz jako .xlsm). Dwuklik = ✔ / usuń."),
+    ("LIBREOFFICE / EXCEL", None),
+    ("•", "Plik działa tak samo w Excelu i w LibreOffice. Zapisuj go zawsze jako .xlsx – w LibreOffice przy zapisie wybierz „Użyj formatu Excel 2007-365!”."),
+    ("•", "Plik na wspólnym dysku: w danej chwili edytuje go jedna osoba. Pozostali otwierają go „tylko do odczytu” albo po zamknięciu przez Mateusza."),
 ]
 r = 5
 for a, b in steps:
